@@ -17,8 +17,8 @@ public class SportEventOutcomeKafkaConsumer {
     private final JsonUtils jsonUtils;
 
     @KafkaListener(topics = "event-outcomes", groupId = "bet-settlement-group")
-    public void consume(String payload) {
-        SportEventOutcome sportEventOutcome = jsonUtils.parseJson(payload, SportEventOutcome.class);
+    public void consume(String sportEventOutcomeJson) {
+        SportEventOutcome sportEventOutcome = jsonUtils.parseJson(sportEventOutcomeJson, SportEventOutcome.class);
         log.info("Received sportEventOutcome from Kafka: {}", sportEventOutcome);
         sportEventOutcomeService.handle(sportEventOutcome);
     }

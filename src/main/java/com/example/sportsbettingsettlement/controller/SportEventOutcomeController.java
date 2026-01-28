@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/sport/event-outcomes")
+@RequestMapping("/sport/event-outcomes")
 @RequiredArgsConstructor
 public class SportEventOutcomeController {
 

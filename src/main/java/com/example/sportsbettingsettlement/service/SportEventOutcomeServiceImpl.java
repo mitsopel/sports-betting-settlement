@@ -32,6 +32,7 @@ public class SportEventOutcomeServiceImpl implements SportEventOutcomeService {
     @Override
     public void handle(SportEventOutcome sportEventOutcome) {
         List<Bet> betsToSettle = betRepository.findByEventId(sportEventOutcome.eventId());
+        //todo send settlements ONLY to winners
         betsToSettle.forEach(bet -> betSettlementProducer.send(bet, sportEventOutcome));
     }
 }

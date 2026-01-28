@@ -6,4 +6,4 @@ public record SportEventOutcome(
     String eventWinnerId
 ) {
 
-}
+}// todo make class, remove records, add dto, domain, entity

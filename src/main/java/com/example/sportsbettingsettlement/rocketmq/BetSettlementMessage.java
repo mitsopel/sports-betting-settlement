@@ -12,9 +12,9 @@ public class BetSettlementMessage {
     private Long userId;
     private String eventId;
     private String eventMarketId;
-    private String eventWinnerId; // predicted winner
+    private String predictedEventWinnerId; // predicted winner
     private BigDecimal betAmount;
     private String actualEventWinnerId; // actual winner from outcome
-    private final boolean won;
+    private final boolean hasWon;
     private final BigDecimal payoutAmount;
 }

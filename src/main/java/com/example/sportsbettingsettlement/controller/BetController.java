@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/bets")
+@RequestMapping("/bets")
 @RequiredArgsConstructor
 public class BetController {
 
     private final BetRepository betRepository;
 
     @GetMapping
-    public List<Bet> getAllBets() {
+    public List<Bet> findAll() {
         return betRepository.findAll();
     }
 }
