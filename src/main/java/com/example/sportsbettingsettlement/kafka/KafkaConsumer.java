@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class SportEventOutcomeKafkaConsumer {
+public class KafkaConsumer {
 
     private final SportEventOutcomeService sportEventOutcomeService;
     private final JsonUtils jsonUtils;
 
-    @KafkaListener(topics = "event-outcomes", groupId = "bet-settlement-group")
+    @KafkaListener(topics = "${kafka.topics.event-outcomes}", groupId = "${kafka.consumer.group-id}")
     public void consume(String sportEventOutcomeJson) {
         SportEventOutcome sportEventOutcome = jsonUtils.parseJson(sportEventOutcomeJson, SportEventOutcome.class);
         log.info("Received sportEventOutcome from Kafka: {}", sportEventOutcome);

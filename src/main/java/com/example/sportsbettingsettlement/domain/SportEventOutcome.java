@@ -1,9 +1,23 @@
 package com.example.sportsbettingsettlement.domain;
 
-public record SportEventOutcome(
-    String eventId,
-    String eventName,
-    String eventWinnerId
-) {
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Value;
 
-}// todo make class, remove records, add dto, domain, entity
+@Value
+public class SportEventOutcome {
+    String eventId;
+    String eventName;
+    String eventWinnerId;
+
+    @JsonCreator
+    public SportEventOutcome(
+        @JsonProperty("eventId") String eventId,
+        @JsonProperty("eventName") String eventName,
+        @JsonProperty("eventWinnerId") String eventWinnerId
+    ) {
+        this.eventId = eventId;
+        this.eventName = eventName;
+        this.eventWinnerId = eventWinnerId;
+    }
+}

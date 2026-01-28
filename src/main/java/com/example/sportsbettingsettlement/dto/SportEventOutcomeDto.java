@@ -1,8 +1,10 @@
 package com.example.sportsbettingsettlement.dto;
 
-public record SportEventOutcomeDto(
-    String eventId,
-    String eventName,
-    String eventWinnerId) {
+import lombok.Value;
 
+@Value
+public class SportEventOutcomeDto {
+    String eventId;
+    String eventName;
+    String eventWinnerId;
 }

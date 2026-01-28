@@ -15,6 +15,5 @@ public class BetSettlementMessage {
     private String predictedEventWinnerId; // predicted winner
     private BigDecimal betAmount;
     private String actualEventWinnerId; // actual winner from outcome
-    private final boolean hasWon;
     private final BigDecimal payoutAmount;
 }

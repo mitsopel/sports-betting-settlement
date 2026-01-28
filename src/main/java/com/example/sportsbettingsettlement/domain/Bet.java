@@ -1,24 +1,14 @@
 package com.example.sportsbettingsettlement.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.math.BigDecimal;
+import lombok.Value;
 
-@Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Value
 public class Bet {
-
-    @Id
-    private Long betId;
-    private Long userId;
-    private String eventId;
-    private String eventMarketId;
-    private String eventWinnerId;
-    private BigDecimal betAmount;
+    Long betId;
+    Long userId;
+    String eventId;
+    String eventMarketId;
+    String eventWinnerId;
+    BigDecimal betAmount;
 }
