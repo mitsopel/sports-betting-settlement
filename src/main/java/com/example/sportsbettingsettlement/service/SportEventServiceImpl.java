@@ -29,7 +29,7 @@ public class SportEventServiceImpl implements SportEventService {
     }
 
     @Override
-    public void handle(SportEventOutcome sportEventOutcome) {
+    public void handleSettlements(SportEventOutcome sportEventOutcome) {
         List<BetEntity> betEntityList = betRepository.findByEventId(sportEventOutcome.getEventId());
         List<Bet> betDomainList = betMapper.toDomainList(betEntityList);
 

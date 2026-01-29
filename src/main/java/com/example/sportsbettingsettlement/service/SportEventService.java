@@ -6,5 +6,5 @@ public interface SportEventService {
 
     void publish(SportEventOutcome sportEventOutcome);
 
-    void handle(SportEventOutcome sportEventOutcome);
+    void handleSettlements(SportEventOutcome sportEventOutcome);
 }

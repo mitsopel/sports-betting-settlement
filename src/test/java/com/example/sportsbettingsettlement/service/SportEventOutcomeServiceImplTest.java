@@ -54,7 +54,7 @@ class SportEventOutcomeServiceImplTest {
     }
 
     @Test
-    void shouldHandleSportEventOutcome() {
+    void shouldHandleSettlementsForSportEventOutcome() {
         BetEntity winner = new BetEntity(1L, 101L, "EVT-1", "MKT-1", "WIN-1", BigDecimal.TEN);
         BetEntity loser = new BetEntity(2L, 102L, "EVT-1", "MKT-1", "WIN-2", BigDecimal.valueOf(20));
         when(betRepository.findByEventId("EVT-1")).thenReturn(List.of(winner, loser));
@@ -62,22 +62,22 @@ class SportEventOutcomeServiceImplTest {
         ArgumentCaptor<BetSettlementMessage> captor = ArgumentCaptor.forClass(BetSettlementMessage.class);
         doNothing().when(rocketMQProducer).send(any());
 
-        sportEventService.handle(new SportEventOutcome("EVT-1", "Event One", "WIN-1"));
+        sportEventService.handleSettlements(new SportEventOutcome("EVT-1", "Event One", "WIN-1"));
 
         verify(rocketMQProducer, times(1)).send(captor.capture());
         BetSettlementMessage betSettlementMessage = captor.getValue();
         assertThat(betSettlementMessage.getBetId()).isEqualTo(1L);
         assertThat(betSettlementMessage.getEventWinnerId()).isEqualTo("WIN-1");
-        assertThat(betSettlementMessage.getPayload()).isEqualByComparingTo(BigDecimal.valueOf(20));
+        assertThat(betSettlementMessage.getPayoutAmount()).isEqualByComparingTo(BigDecimal.valueOf(20));
     }
 
     @Test
-    void shouldHandleSportEventOutcomeAndNotSendAnySettlementWhenNoWinners() {
+    void shouldNotSendAnySettlementForSportEventOutcomeWhenNoWinners() {
         BetEntity loser1 = new BetEntity(1L, 101L, "EVT-1", "MKT-1", "WIN-2", BigDecimal.TEN);
         BetEntity loser2 = new BetEntity(2L, 102L, "EVT-1", "MKT-1", "WIN-3", BigDecimal.valueOf(20));
         when(betRepository.findByEventId("EVT-1")).thenReturn(List.of(loser1, loser2));
 
-        sportEventService.handle(new SportEventOutcome("EVT-1", "Event One", "WIN-1"));
+        sportEventService.handleSettlements(new SportEventOutcome("EVT-1", "Event One", "WIN-1"));
 
         verify(rocketMQProducer, times(0)).send(any());
     }

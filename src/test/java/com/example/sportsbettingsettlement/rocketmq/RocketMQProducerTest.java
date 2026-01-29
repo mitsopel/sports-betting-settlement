@@ -31,7 +31,7 @@ class RocketMQProducerTest {
             .eventMarketId("MKT-1")
             .eventWinnerId("WIN-1")
             .betAmount(BigDecimal.TEN)
-            .payload(BigDecimal.valueOf(20))
+            .payoutAmount(BigDecimal.valueOf(20))
             .build();
 
         assertThatCode(() -> rocketMQProducer.send(betSettlementMessage)).doesNotThrowAnyException();

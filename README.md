@@ -1,7 +1,7 @@
 # Sports Betting Settlement Trigger Service
 
 ## Overview
-This service simulates sports betting event outcome handling and bet settlement using Kafka (for event outcomes) and a mocked RocketMQ producer (logs) for bet settlements. It exposes a simple REST API to publish event outcomes and includes a Kafka consumer to process them, matching against in-memory (H2) bets and producing settlement messages for winners.
+This service simulates sports betting event outcome handling and bet settlement using Kafka (for event outcomes) and RocketMQ (for bet settlements). It exposes a simple REST API to publish event outcomes and includes a Kafka consumer to process them, matching against in-memory (H2) bets and producing settlement messages for winners. RocketMQ is optional: if a broker is running, the app will send real messages; otherwise it will fall back to logging the payloads.
 
 ## What’s Implemented
 - REST API endpoint to publish a sports event outcome to Kafka (topic: `event-outcomes`).
@@ -39,7 +39,7 @@ This service simulates sports betting event outcome handling and bet settlement 
 - No local Gradle installation required; use the provided Gradle Wrapper (./gradlew)
 
 ## How to Run
-1) Start Kafka locally via Docker Compose:
+1) Start Kafka and optional RocketMQ locally via Docker Compose:
 
 ```bash
 docker compose up -d
@@ -77,8 +77,39 @@ All relevant properties are externalized in `src/main/resources/application.prop
 kafka.bootstrap-servers=localhost:9092
 kafka.consumer.group-id=bet-settlement-group
 kafka.topics.event-outcomes=event-outcomes
+
+# RocketMQ (optional, real broker)
+rocketmq.name-server=localhost:9876
+rocketmq.producer.group=bet-settlement-producer
 rocketmq.topics.bet-settlements=bet-settlements
 ```
+
+### RocketMQ (real broker) – Optional
+- This project can send real RocketMQ messages if a broker is running. If not, it safely falls back to logging the settlement payloads.
+- Docker Compose already includes RocketMQ NameServer and Broker services, configured for host access (macOS/Windows-friendly):
+  - NameServer: localhost:9876 (exposed)
+  - Broker: advertises 127.0.0.1 via mounted `rocketmq/broker.conf`
+- Properties above point the app to the local NameServer by default.
+
+Start all infra (Kafka + RocketMQ):
+
+```bash
+docker compose up -d
+```
+
+You can create the RocketMQ topic from the app side (autoCreateTopicEnable=true) or explicitly via the RocketMQ admin tools if desired.
+
+Note on RocketMQ 5.x images:
+- If you see errors like `sh: 1: /bin/mqbroker: not found` or `sh: 1: /bin/mqnamesrv: not found` in Docker Desktop logs, it's because some image variants don't set ROCKETMQ_HOME or have the binaries in PATH. The compose file is now configured to call them via absolute paths inside the image: `/home/rocketmq/rocketmq-5.3.1/bin/...`.
+- You can also exec into the container to verify:
+  ```bash
+  docker compose logs -f rocketmq-namesrv rocketmq-broker
+  docker compose exec rocketmq-namesrv ls /home/rocketmq/rocketmq-5.3.1/bin
+  ```
+
+macOS/Apple Silicon notes:
+- We pin the RocketMQ containers to `linux/amd64` to avoid architecture issues on Apple Silicon.
+- The broker is configured with `brokerIP1=127.0.0.1` so the host app can connect reliably.
 
 ## API Usage
 - Publish a sport event outcome:

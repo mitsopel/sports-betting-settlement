@@ -16,7 +16,7 @@ public class BetSettlementMessage {
     String eventMarketId;
     String eventWinnerId;
     BigDecimal betAmount;
-    BigDecimal payload;
+    BigDecimal payoutAmount;
 
     public static BetSettlementMessage createBetSettlementMessage(Bet bet) {
         return BetSettlementMessage.builder()
@@ -26,11 +26,11 @@ public class BetSettlementMessage {
             .eventMarketId(bet.getEventMarketId())
             .eventWinnerId(bet.getEventWinnerId())
             .betAmount(bet.getBetAmount())
-            .payload(computePayload(bet.getBetAmount()))
+            .payoutAmount(calculatePayoutAmount(bet.getBetAmount()))
             .build();
     }
 
-    private static BigDecimal computePayload(BigDecimal betAmount) {
+    private static BigDecimal calculatePayoutAmount(BigDecimal betAmount) {
         // double the bet amount
         return betAmount.multiply(BigDecimal.valueOf(2));
     }
