@@ -18,6 +18,7 @@ This service simulates sports betting event outcome handling and bet settlement 
 - Lombok
 - MapStruct
 - Docker Compose (for Kafka/ZooKeeper)
+- Gradle (via Gradle Wrapper: ./gradlew)
 
 ## Project Structure (key parts)
 - `controller/SportEventController.java`: REST endpoint to publish outcomes.
@@ -35,6 +36,7 @@ This service simulates sports betting event outcome handling and bet settlement 
 ## Prerequisites
 - Java 17+
 - Docker & Docker Compose (for Kafka)
+- No local Gradle installation required; use the provided Gradle Wrapper (./gradlew)
 
 ## How to Run
 1) Start Kafka locally via Docker Compose:
