@@ -6,7 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.example.sportsbettingsettlement.domain.SportEventOutcome;
-import com.example.sportsbettingsettlement.json.JsonUtils;
+import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,10 +18,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 class KafkaProducerTest {
 
     @Mock
-    private KafkaTemplate<String, String> kafkaTemplate;
-
-    @Mock
-    private JsonUtils jsonUtils;
+    private KafkaTemplate<String, SportEventOutcome> kafkaTemplate;
 
     @InjectMocks
     private KafkaProducer producer;
@@ -29,16 +26,17 @@ class KafkaProducerTest {
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        ReflectionTestUtils.setField(producer, "topic", "event-outcomes");
+        ReflectionTestUtils.setField(producer, "eventOutcomesTopic", "event-outcomes");
     }
 
     @Test
-    void shouldPublishSendingToKafkaWithKeyAndJson() {
+    void shouldPublishSendingToKafkaWithKeyAndObject() {
         SportEventOutcome outcome = new SportEventOutcome("EVT-1", "Event One", "WIN-1");
-        when(jsonUtils.convertToJson(outcome)).thenReturn("{json}");
+        when(kafkaTemplate.send(eq("event-outcomes"), eq("EVT-1"), eq(outcome)))
+            .thenReturn(CompletableFuture.completedFuture(null));
 
         producer.publish(outcome);
 
-        verify(kafkaTemplate, times(1)).send(eq("event-outcomes"), eq("EVT-1"), eq("{json}"));
+        verify(kafkaTemplate, times(1)).send(eq("event-outcomes"), eq("EVT-1"), eq(outcome));
     }
 }

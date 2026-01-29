@@ -2,10 +2,8 @@ package com.example.sportsbettingsettlement.kafka;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.example.sportsbettingsettlement.domain.SportEventOutcome;
-import com.example.sportsbettingsettlement.json.JsonUtils;
 import com.example.sportsbettingsettlement.service.SportEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,9 +16,6 @@ class KafkaConsumerTest {
     @Mock
     private SportEventService service;
 
-    @Mock
-    private JsonUtils jsonUtils;
-
     @InjectMocks
     private KafkaConsumer consumer;
 
@@ -30,12 +25,10 @@ class KafkaConsumerTest {
     }
 
     @Test
-    void shouldParseJsonAndCallServiceOnConsume() {
-        String payload = "{\"eventId\":\"EVT-1\",\"eventName\":\"Event One\",\"eventWinnerId\":\"WIN-1\"}";
+    void shouldConsumeObjectAndCallServiceOnConsume() {
         SportEventOutcome outcome = new SportEventOutcome("EVT-1", "Event One", "WIN-1");
-        when(jsonUtils.parseJson(payload, SportEventOutcome.class)).thenReturn(outcome);
 
-        consumer.consume(payload);
+        consumer.consume(outcome);
 
         verify(service, times(1)).handle(outcome);
     }
