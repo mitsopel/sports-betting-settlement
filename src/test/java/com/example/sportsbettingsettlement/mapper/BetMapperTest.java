@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.sportsbettingsettlement.domain.Bet;
 import com.example.sportsbettingsettlement.dto.BetDto;
-import com.example.sportsbettingsettlement.persistence.BetEntity;
+import com.example.sportsbettingsettlement.entity.BetEntity;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.Test;

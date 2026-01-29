@@ -2,6 +2,7 @@ package com.example.sportsbettingsettlement.rocketmq;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 
+import com.example.sportsbettingsettlement.domain.BetSettlementMessage;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ class RocketMQProducerTest {
     @Test
     void shouldNotThrowAndLogsOnSend() {
         BetSettlementMessage msg = new BetSettlementMessage(
-            1L, 101L, "EVT-1", "MKT-1", "WIN-1", BigDecimal.TEN, "WIN-1", BigDecimal.valueOf(20)
+            1L, 101L, "EVT-1", "MKT-1", "WIN-1", "WIN-1", BigDecimal.TEN, BigDecimal.valueOf(20)
         );
 
         assertThatCode(() -> producer.send(msg)).doesNotThrowAnyException();

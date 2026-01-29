@@ -2,7 +2,7 @@ package com.example.sportsbettingsettlement.mapper;
 
 import com.example.sportsbettingsettlement.domain.Bet;
 import com.example.sportsbettingsettlement.dto.BetDto;
-import com.example.sportsbettingsettlement.persistence.BetEntity;
+import com.example.sportsbettingsettlement.entity.BetEntity;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;

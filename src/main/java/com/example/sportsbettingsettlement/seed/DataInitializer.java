@@ -1,6 +1,6 @@
 package com.example.sportsbettingsettlement.seed;
 
-import com.example.sportsbettingsettlement.persistence.BetEntity;
+import com.example.sportsbettingsettlement.entity.BetEntity;
 import com.example.sportsbettingsettlement.repository.BetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;

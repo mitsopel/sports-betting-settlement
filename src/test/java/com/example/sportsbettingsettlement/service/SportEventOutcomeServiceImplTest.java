@@ -9,18 +9,21 @@ import static org.mockito.Mockito.when;
 
 import com.example.sportsbettingsettlement.domain.SportEventOutcome;
 import com.example.sportsbettingsettlement.kafka.KafkaProducer;
-import com.example.sportsbettingsettlement.persistence.BetEntity;
+import com.example.sportsbettingsettlement.entity.BetEntity;
 import com.example.sportsbettingsettlement.repository.BetRepository;
-import com.example.sportsbettingsettlement.rocketmq.BetSettlementMessage;
+import com.example.sportsbettingsettlement.domain.BetSettlementMessage;
 import com.example.sportsbettingsettlement.rocketmq.RocketMQProducer;
+import com.example.sportsbettingsettlement.mapper.BetMapper;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 class SportEventOutcomeServiceImplTest {
 
@@ -33,8 +36,11 @@ class SportEventOutcomeServiceImplTest {
     @Mock
     private RocketMQProducer rocketMQProducer;
 
+    @Spy
+    private BetMapper betMapper = Mappers.getMapper(BetMapper.class);
+
     @InjectMocks
-    private SportEventOutcomeServiceImpl service;
+    private SportEventServiceImpl service;
 
     @BeforeEach
     void setup() {

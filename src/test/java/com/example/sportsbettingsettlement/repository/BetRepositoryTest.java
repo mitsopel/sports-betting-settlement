@@ -2,7 +2,7 @@ package com.example.sportsbettingsettlement.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.sportsbettingsettlement.persistence.BetEntity;
+import com.example.sportsbettingsettlement.entity.BetEntity;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.Test;

@@ -5,7 +5,7 @@ import static org.mockito.Mockito.when;
 
 import com.example.sportsbettingsettlement.domain.Bet;
 import com.example.sportsbettingsettlement.mapper.BetMapper;
-import com.example.sportsbettingsettlement.persistence.BetEntity;
+import com.example.sportsbettingsettlement.entity.BetEntity;
 import com.example.sportsbettingsettlement.repository.BetRepository;
 import java.math.BigDecimal;
 import java.util.List;

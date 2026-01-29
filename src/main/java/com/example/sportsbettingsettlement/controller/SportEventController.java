@@ -1,26 +1,28 @@
 package com.example.sportsbettingsettlement.controller;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import com.example.sportsbettingsettlement.domain.SportEventOutcome;
 import com.example.sportsbettingsettlement.dto.SportEventOutcomeDto;
 import com.example.sportsbettingsettlement.mapper.SportEventOutcomeMapper;
-import com.example.sportsbettingsettlement.service.SportEventOutcomeService;
+import com.example.sportsbettingsettlement.service.SportEventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/sport/event-outcomes")
+@RequestMapping("/sport-event")
 @RequiredArgsConstructor
-public class SportEventOutcomeController {
+public class SportEventController {
 
-    private final SportEventOutcomeService sportEventOutcomeService;
+    private final SportEventService sportEventService;
     private final SportEventOutcomeMapper sportEventOutcomeMapper;
 
-    @PostMapping
+    @PostMapping(path = "/outcomes", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<String> add(@Valid @RequestBody SportEventOutcomeDto sportEventOutcomeDto) {
         SportEventOutcome sportEventOutcome = sportEventOutcomeMapper.toDomain(sportEventOutcomeDto);
-        sportEventOutcomeService.publish(sportEventOutcome);
+        sportEventService.publish(sportEventOutcome);
         return ResponseEntity.ok("Sport event outcome published to Kafka");
     }
 }

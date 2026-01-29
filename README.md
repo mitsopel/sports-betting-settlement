@@ -1,11 +1,11 @@
 Sports Betting Settlement Trigger Service
 
 Overview
-This service simulates sports betting event outcome handling and betEntity settlement using Kafka (for event outcomes) and a mocked RocketMQ producer (logs) for betEntity settlements. It exposes a simple REST API to publish event outcomes and includes a Kafka consumer to process them, matching against in-memory (H2) bets and producing settlement messages for winners.
+This service simulates sports betting event outcome handling and bet settlement using Kafka (for event outcomes) and a mocked RocketMQ producer (logs) for bet settlements. It exposes a simple REST API to publish event outcomes and includes a Kafka consumer to process them, matching against in-memory (H2) bets and producing settlement messages for winners.
 
 What’s Implemented
 - REST API endpoint to publish a sports event outcome to Kafka (topic: event-outcomes).
-- Kafka producer and consumer.
+- Kafka producer and consumer with configuration externalized to application.properties.
 - In-memory H2 database with seed data for bets.
 - Winner filtering: only bets that predicted the actual winner are sent to settlements.
 - RocketMQ producer mocked via logging (no RocketMQ setup required).
@@ -16,15 +16,20 @@ Tech Stack
 - Spring Kafka
 - Spring Data JPA + H2 (in-memory)
 - Lombok
+- MapStruct
 - Docker Compose (for Kafka/ZooKeeper)
 
 Project Structure (key parts)
-- controller/SportEventOutcomeController.java: REST endpoint to publish outcomes.
-- kafka/SportEventOutcomeKafkaProducer.java: Publishes outcome JSON to Kafka.
-- kafka/SportEventOutcomeKafkaConsumer.java: Consumes from Kafka and triggers handling.
-- service/SportEventOutcomeServiceImpl.java: Matches bets by eventId and filters winners.
+- controller/SportEventController.java: REST endpoint to publish outcomes.
+- kafka/KafkaProducer.java: Publishes outcome JSON to Kafka.
+- kafka/KafkaConsumer.java: Consumes from Kafka and triggers handling.
+- service/SportEventServiceImpl.java: Matches bets by eventId, filters winners, and builds settlement messages.
 - repository/BetRepository.java: JPA repository.
-- rocketmq/BetSettlementProducer.java: Mock RocketMQ producer (logs payloads).
+- rocketmq/RocketMQProducer.java: Mock RocketMQ producer (logs payloads).
+- domain/: Bet, SportEventOutcome, BetSettlementMessage (domain models).
+- dto/: BetDto, SportEventOutcomeDto (API layer DTOs).
+- mapper/: MapStruct mappers for DTO/Domain/Entity transformations.
+- persistence/BetEntity.java: JPA entity for bets.
 - seed/DataInitializer.java: Seeds some bets into H2 at startup.
 
 Prerequisites
@@ -37,6 +42,15 @@ How to Run
 
    This starts ZooKeeper and Kafka listening on localhost:9092.
 
+   Create Kafka topic:
+
+   docker exec -it <kafka-container-id> kafka-topics \
+   --bootstrap-server localhost:9092 \
+   --create \
+   --topic event-outcomes \
+   --partitions 1 \
+   --replication-factor 1
+
 2) Build and run the app (from project root):
    ./gradlew clean bootRun
 
@@ -46,9 +60,16 @@ How to Run
    - Username: sa
    - Password: (empty)
 
+Configuration
+All relevant properties are externalized in src/main/resources/application.properties:
+- kafka.bootstrap-servers=localhost:9092
+- kafka.consumer.group-id=bet-settlement-group
+- kafka.topics.event-outcomes=event-outcomes
+- rocketmq.topics.bet-settlements=bet-settlements
+
 API Usage
 - Publish a sport event outcome:
-  POST http://localhost:8080/sport/event-outcomes
+  POST http://localhost:8080/sport-event/outcomes
   Content-Type: application/json
   Body example:
   {
@@ -59,7 +80,7 @@ API Usage
 
   Behavior:
   - The API publishes the JSON to Kafka topic event-outcomes using the eventId as key.
-  - The Kafka consumer reads the message, loads bets by eventId from H2, filters only winning bets (betEntity.eventWinnerId == eventWinnerId), and sends settlement messages via the mocked RocketMQ producer.
+  - The Kafka consumer reads the message, loads bets by eventId from H2, filters only winning bets (bet.eventWinnerId == sportEventOutcome.eventWinnerId), and sends settlement messages via the mocked RocketMQ producer.
   - Settlement messages are logged with prefix: [MOCK ROCKETMQ]
 
 - List all bets (seeded):
@@ -77,11 +98,9 @@ Example Flow
 
 Notes & Assumptions
 - RocketMQ producer is intentionally mocked (logs). No RocketMQ installation is required.
-- Kafka configuration is minimal and uses localhost:9092; see docker-compose.yml for a quick local cluster.
-- Topics and group ids are currently hardcoded in code for simplicity (event-outcomes, group betEntity-settlement-group).
+- Kafka configuration uses localhost:9092 by default; see docker-compose.yml for a quick local cluster.
 
 Potential Improvements (Next Steps)
-- Externalize Kafka topic names, group ids, and bootstrap servers to application.properties.
 - Add integration tests for Kafka flow with Testcontainers.
 - Extend settlement payload and persistence of settlement results.
 - Add basic validation and error handling for the API.

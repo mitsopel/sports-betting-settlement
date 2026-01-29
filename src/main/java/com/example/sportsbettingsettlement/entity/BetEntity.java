@@ -1,4 +1,4 @@
-package com.example.sportsbettingsettlement.persistence;
+package com.example.sportsbettingsettlement.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

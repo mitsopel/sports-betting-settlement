@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import com.example.sportsbettingsettlement.domain.SportEventOutcome;
 import com.example.sportsbettingsettlement.json.JsonUtils;
-import com.example.sportsbettingsettlement.service.SportEventOutcomeService;
+import com.example.sportsbettingsettlement.service.SportEventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -16,7 +16,7 @@ import org.mockito.MockitoAnnotations;
 class KafkaConsumerTest {
 
     @Mock
-    private SportEventOutcomeService service;
+    private SportEventService service;
 
     @Mock
     private JsonUtils jsonUtils;
