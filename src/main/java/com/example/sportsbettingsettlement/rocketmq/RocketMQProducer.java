@@ -16,5 +16,7 @@ public class RocketMQProducer {
 
     public void send(BetSettlementMessage betSettlementMessage) {
         log.info("[MOCK ROCKETMQ] Sending to topic {}: {}", betSettlementsTopic, betSettlementMessage);
+        log.info("[MOCK ROCKETMQ] User with id {} has won and the payload is: {} EUR.",
+            betSettlementMessage.getUserId(), betSettlementMessage.getPayload());
     }
 }

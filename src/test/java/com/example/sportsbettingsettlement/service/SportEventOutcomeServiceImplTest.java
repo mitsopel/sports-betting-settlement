@@ -71,8 +71,7 @@ class SportEventOutcomeServiceImplTest {
         verify(rocketMQProducer, times(1)).send(captor.capture());
         BetSettlementMessage msg = captor.getValue();
         assertThat(msg.getBetId()).isEqualTo(1L);
-        assertThat(msg.getPredictedEventWinnerId()).isEqualTo("WIN-1");
-        assertThat(msg.getActualEventWinnerId()).isEqualTo("WIN-1");
-        assertThat(msg.getPayoutAmount()).isEqualByComparingTo(BigDecimal.valueOf(20));
+        assertThat(msg.getEventWinnerId()).isEqualTo("WIN-1");
+        assertThat(msg.getPayload()).isEqualByComparingTo(BigDecimal.valueOf(20));
     }
 }

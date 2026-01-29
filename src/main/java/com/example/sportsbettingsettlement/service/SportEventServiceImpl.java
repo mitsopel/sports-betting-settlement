@@ -1,8 +1,8 @@
 package com.example.sportsbettingsettlement.service;
 
-import static com.example.sportsbettingsettlement.domain.BetSettlementMessage.createBetSettlementMessage;
 
 import com.example.sportsbettingsettlement.domain.Bet;
+import com.example.sportsbettingsettlement.domain.BetSettlementMessage;
 import com.example.sportsbettingsettlement.mapper.BetMapper;
 import com.example.sportsbettingsettlement.entity.BetEntity;
 import com.example.sportsbettingsettlement.domain.SportEventOutcome;
@@ -33,10 +33,10 @@ public class SportEventServiceImpl implements SportEventService {
         List<BetEntity> betEntityList = betRepository.findByEventId(sportEventOutcome.getEventId());
         List<Bet> betDomainList = betMapper.toDomainList(betEntityList);
 
+        // Build settlement messages ONLY for winners and forward to RocketMQ producer
         betDomainList.stream()
-            // Build settlement messages ONLY for winners and forward to RocketMQ producer
-            .filter(bet -> bet.getEventWinnerId().equals(sportEventOutcome.getEventWinnerId()))
-            .map(bet -> createBetSettlementMessage(bet, sportEventOutcome))
+            .filter(bet -> bet.hasWon(sportEventOutcome.getEventWinnerId()))
+            .map(BetSettlementMessage::createBetSettlementMessage)
             .forEach(rocketMQProducer::send);
     }
 }

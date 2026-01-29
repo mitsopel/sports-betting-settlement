@@ -14,21 +14,24 @@ public class BetSettlementMessage {
     Long userId;
     String eventId;
     String eventMarketId;
-    String predictedEventWinnerId; // predicted winner
-    String actualEventWinnerId; // actual winner from the sport event outcome
+    String eventWinnerId;
     BigDecimal betAmount;
-    BigDecimal payoutAmount;
+    BigDecimal payload;
 
-    public static BetSettlementMessage createBetSettlementMessage(Bet bet, SportEventOutcome sportEventOutcome) {
+    public static BetSettlementMessage createBetSettlementMessage(Bet bet) {
         return BetSettlementMessage.builder()
             .betId(bet.getBetId())
             .userId(bet.getUserId())
             .eventId(bet.getEventId())
             .eventMarketId(bet.getEventMarketId())
-            .predictedEventWinnerId(bet.getEventWinnerId())
-            .actualEventWinnerId(sportEventOutcome.getEventWinnerId())
+            .eventWinnerId(bet.getEventWinnerId())
             .betAmount(bet.getBetAmount())
-            .payoutAmount(bet.getBetAmount().multiply(BigDecimal.valueOf(2)))
+            .payload(computePayload(bet.getBetAmount()))
             .build();
+    }
+
+    private static BigDecimal computePayload(BigDecimal betAmount) {
+        // double the bet amount
+        return betAmount.multiply(BigDecimal.valueOf(2));
     }
 }

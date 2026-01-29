@@ -1,5 +1,6 @@
 package com.example.sportsbettingsettlement.controller;
 
+import com.example.sportsbettingsettlement.domain.Bet;
 import com.example.sportsbettingsettlement.dto.BetDto;
 import com.example.sportsbettingsettlement.mapper.BetMapper;
 import com.example.sportsbettingsettlement.service.BetService;
@@ -19,7 +20,7 @@ public class BetController {
 
     @GetMapping
     public List<BetDto> findAll() {
-        var bets = betService.findAll();
+        List<Bet> bets = betService.findAll();
         return betMapper.toDtoList(bets);
     }
 }

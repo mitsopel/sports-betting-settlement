@@ -23,9 +23,15 @@ class RocketMQProducerTest {
 
     @Test
     void shouldNotThrowAndLogsOnSend() {
-        BetSettlementMessage msg = new BetSettlementMessage(
-            1L, 101L, "EVT-1", "MKT-1", "WIN-1", "WIN-1", BigDecimal.TEN, BigDecimal.valueOf(20)
-        );
+        BetSettlementMessage msg = BetSettlementMessage.builder()
+            .betId(1L)
+            .userId(101L)
+            .eventId("EVT-1")
+            .eventMarketId("MKT-1")
+            .eventWinnerId("WIN-1")
+            .betAmount(BigDecimal.TEN)
+            .payload(BigDecimal.valueOf(20))
+            .build();
 
         assertThatCode(() -> producer.send(msg)).doesNotThrowAnyException();
     }
