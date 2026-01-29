@@ -18,25 +18,25 @@ import org.springframework.test.util.ReflectionTestUtils;
 class KafkaProducerTest {
 
     @Mock
-    private KafkaTemplate<String, SportEventOutcome> kafkaTemplate;
+    private KafkaTemplate<String, SportEventOutcome> sportEventOutcomeKafkaTemplate;
 
     @InjectMocks
-    private KafkaProducer producer;
+    private KafkaProducer kafkaProducer;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        ReflectionTestUtils.setField(producer, "eventOutcomesTopic", "event-outcomes");
+        ReflectionTestUtils.setField(kafkaProducer, "eventOutcomesTopic", "event-outcomes");
     }
 
     @Test
-    void shouldPublishSendingToKafkaWithKeyAndObject() {
-        SportEventOutcome outcome = new SportEventOutcome("EVT-1", "Event One", "WIN-1");
-        when(kafkaTemplate.send(eq("event-outcomes"), eq("EVT-1"), eq(outcome)))
+    void shouldPublishSportEventOutcome() {
+        SportEventOutcome sportEventOutcome = new SportEventOutcome("EVT-1", "Event One", "WIN-1");
+        when(sportEventOutcomeKafkaTemplate.send(eq("event-outcomes"), eq("EVT-1"), eq(sportEventOutcome)))
             .thenReturn(CompletableFuture.completedFuture(null));
 
-        producer.publish(outcome);
+        kafkaProducer.publish(sportEventOutcome);
 
-        verify(kafkaTemplate, times(1)).send(eq("event-outcomes"), eq("EVT-1"), eq(outcome));
+        verify(sportEventOutcomeKafkaTemplate, times(1)).send(eq("event-outcomes"), eq("EVT-1"), eq(sportEventOutcome));
     }
 }

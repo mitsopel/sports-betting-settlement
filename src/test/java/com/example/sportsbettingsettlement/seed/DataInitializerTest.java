@@ -18,7 +18,7 @@ class DataInitializerTest {
     private BetRepository betRepository;
 
     @InjectMocks
-    private DataInitializer initializer;
+    private DataInitializer dataInitializer;
 
     @BeforeEach
     void setup() {
@@ -27,7 +27,7 @@ class DataInitializerTest {
 
     @Test
     void shouldSeedThreeBetsOnRun() throws Exception {
-        initializer.run();
+        dataInitializer.run();
         verify(betRepository, times(3)).save(any(BetEntity.class));
     }
 }

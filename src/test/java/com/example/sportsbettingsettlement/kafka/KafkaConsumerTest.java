@@ -14,10 +14,10 @@ import org.mockito.MockitoAnnotations;
 class KafkaConsumerTest {
 
     @Mock
-    private SportEventService service;
+    private SportEventService sportEventService;
 
     @InjectMocks
-    private KafkaConsumer consumer;
+    private KafkaConsumer kafkaConsumer;
 
     @BeforeEach
     void setup() {
@@ -25,11 +25,11 @@ class KafkaConsumerTest {
     }
 
     @Test
-    void shouldConsumeObjectAndCallServiceOnConsume() {
-        SportEventOutcome outcome = new SportEventOutcome("EVT-1", "Event One", "WIN-1");
+    void shouldConsumeSportEventOutcome() {
+        SportEventOutcome sportEventOutcome = new SportEventOutcome("EVT-1", "Event One", "WIN-1");
 
-        consumer.consume(outcome);
+        kafkaConsumer.consume(sportEventOutcome);
 
-        verify(service, times(1)).handle(outcome);
+        verify(sportEventService, times(1)).handle(sportEventOutcome);
     }
 }

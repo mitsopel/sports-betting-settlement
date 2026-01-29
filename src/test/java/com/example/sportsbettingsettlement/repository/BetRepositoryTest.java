@@ -21,7 +21,7 @@ class BetRepositoryTest {
         betRepository.save(new BetEntity(2L, 102L, "EVT-1", "MKT-1", "WIN-2", BigDecimal.ONE));
         betRepository.save(new BetEntity(3L, 103L, "EVT-2", "MKT-2", "WIN-3", BigDecimal.valueOf(5)));
 
-        List<BetEntity> result = betRepository.findByEventId("EVT-1");
-        assertThat(result).extracting(BetEntity::getBetId).containsExactlyInAnyOrder(1L, 2L);
+        List<BetEntity> betEntities = betRepository.findByEventId("EVT-1");
+        assertThat(betEntities).extracting(BetEntity::getBetId).containsExactlyInAnyOrder(1L, 2L);
     }
 }

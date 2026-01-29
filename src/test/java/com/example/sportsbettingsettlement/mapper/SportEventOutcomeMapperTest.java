@@ -9,14 +9,14 @@ import org.mapstruct.factory.Mappers;
 
 class SportEventOutcomeMapperTest {
 
-    private final SportEventOutcomeMapper mapper = Mappers.getMapper(SportEventOutcomeMapper.class);
+    private final SportEventOutcomeMapper sportEventOutcomeMapper = Mappers.getMapper(SportEventOutcomeMapper.class);
 
     @Test
     void shouldMapAllFieldsToDomain() {
-        SportEventOutcomeDto dto = new SportEventOutcomeDto("EVT-1", "Event One", "WIN-1");
-        SportEventOutcome domain = mapper.toDomain(dto);
-        assertThat(domain.getEventId()).isEqualTo("EVT-1");
-        assertThat(domain.getEventName()).isEqualTo("Event One");
-        assertThat(domain.getEventWinnerId()).isEqualTo("WIN-1");
+        SportEventOutcomeDto sportEventOutcomeDto = new SportEventOutcomeDto("EVT-1", "Event One", "WIN-1");
+        SportEventOutcome sportEventOutcome = sportEventOutcomeMapper.toDomain(sportEventOutcomeDto);
+        assertThat(sportEventOutcome.getEventId()).isEqualTo("EVT-1");
+        assertThat(sportEventOutcome.getEventName()).isEqualTo("Event One");
+        assertThat(sportEventOutcome.getEventWinnerId()).isEqualTo("WIN-1");
     }
 }

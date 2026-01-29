@@ -30,7 +30,7 @@ class BetControllerTest {
     private BetMapper betMapper;
 
     @Test
-    void shouldReturnListOnFindAll() throws Exception {
+    void shouldFindAllBets() throws Exception {
         List<Bet> domain = List.of(
             new Bet(1L, 101L, "EVT-1", "MKT-1", "WIN-1", BigDecimal.TEN),
             new Bet(2L, 102L, "EVT-2", "MKT-2", "WIN-2", BigDecimal.ONE)

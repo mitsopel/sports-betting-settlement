@@ -28,17 +28,17 @@ class SportEventControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private SportEventService service;
+    private SportEventService sportEventService;
 
     @MockBean
-    private SportEventOutcomeMapper mapper;
+    private SportEventOutcomeMapper sportEventOutcomeMapper;
 
     @Test
-    void shouldPublishOutcomeAndReturn200() throws Exception {
+    void shouldAddSportEventOutcome() throws Exception {
         SportEventOutcomeDto dto = new SportEventOutcomeDto("EVT-1", "Event One", "WIN-1");
         SportEventOutcome domain = new SportEventOutcome("EVT-1", "Event One", "WIN-1");
-        when(mapper.toDomain(any())).thenReturn(domain);
-        doNothing().when(service).publish(domain);
+        when(sportEventOutcomeMapper.toDomain(any())).thenReturn(domain);
+        doNothing().when(sportEventService).publish(domain);
 
         mockMvc.perform(post("/sport-event/outcomes")
                 .contentType(MediaType.APPLICATION_JSON)

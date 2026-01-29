@@ -13,17 +13,17 @@ import org.springframework.test.util.ReflectionTestUtils;
 class RocketMQProducerTest {
 
     @InjectMocks
-    private RocketMQProducer producer;
+    private RocketMQProducer rocketMQProducer;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        ReflectionTestUtils.setField(producer, "betSettlementsTopic", "bet-settlements");
+        ReflectionTestUtils.setField(rocketMQProducer, "betSettlementsTopic", "bet-settlements");
     }
 
     @Test
-    void shouldNotThrowAndLogsOnSend() {
-        BetSettlementMessage msg = BetSettlementMessage.builder()
+    void shouldSendBetSettlementMessage() {
+        BetSettlementMessage betSettlementMessage = BetSettlementMessage.builder()
             .betId(1L)
             .userId(101L)
             .eventId("EVT-1")
@@ -33,6 +33,6 @@ class RocketMQProducerTest {
             .payload(BigDecimal.valueOf(20))
             .build();
 
-        assertThatCode(() -> producer.send(msg)).doesNotThrowAnyException();
+        assertThatCode(() -> rocketMQProducer.send(betSettlementMessage)).doesNotThrowAnyException();
     }
 }
