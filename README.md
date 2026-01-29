@@ -8,7 +8,7 @@ This service simulates sports betting event outcome handling and bet settlement 
 - Kafka producer and consumer with configuration externalized to `application.properties`.
 - In-memory H2 database with seed data for bets.
 - Winner filtering: only bets that predicted the actual winner are sent to settlements.
-- RocketMQ producer mocked via logging (no actual RocketMQ setup).
+- RocketMQ producer with optional real broker integration (sends via RocketMQTemplate when available, falls back to logging if a broker/template is unavailable).
 
 ## Tech Stack
 - Java 17
@@ -17,7 +17,7 @@ This service simulates sports betting event outcome handling and bet settlement 
 - Spring Data JPA + H2 (in-memory)
 - Lombok
 - MapStruct
-- Docker Compose (for Kafka/ZooKeeper)
+- Docker Compose (for Kafka/ZooKeeper and RocketMQ)
 - Gradle (via Gradle Wrapper: ./gradlew)
 
 ## Project Structure (key parts)
@@ -26,7 +26,7 @@ This service simulates sports betting event outcome handling and bet settlement 
 - `kafka/KafkaConsumer.java`: Consumes `SportEventOutcome` objects from Kafka and triggers handling.
 - `service/SportEventServiceImpl.java`: Matches bets by eventId, filters winners, and builds settlement messages.
 - `repository/BetRepository.java`: JPA repository.
-- `rocketmq/RocketMQProducer.java`: Mock RocketMQ producer (logs payloads).
+- `rocketmq/RocketMQProducer.java`: RocketMQ producer that sends via RocketMQTemplate when available; otherwise logs payloads (mock fallback).
 - `domain/`: Bet, SportEventOutcome, BetSettlementMessage (domain models).
 - `dto/`: BetDto, SportEventOutcomeDto (API layer DTOs).
 - `mapper/`: MapStruct mappers for DTO/Domain/Entity transformations.
@@ -35,7 +35,7 @@ This service simulates sports betting event outcome handling and bet settlement 
 
 ## Prerequisites
 - Java 17+
-- Docker & Docker Compose (for Kafka)
+- Docker & Docker Compose (for Kafka and RocketMQ)
 - No local Gradle installation required; use the provided Gradle Wrapper (./gradlew)
 
 ## How to Run
@@ -45,7 +45,7 @@ This service simulates sports betting event outcome handling and bet settlement 
 docker compose up -d
 ```
 
-This starts ZooKeeper and Kafka listening on `localhost:9092`.
+This starts ZooKeeper and Kafka listening on `localhost:9092`, plus RocketMQ NameServer on `localhost:9876` and a local Broker (ports 10911/10909).
 
 Create the Kafka topic:
 
@@ -131,8 +131,8 @@ Body example:
 
 Behavior:
 - The API publishes a `SportEventOutcome` object to Kafka topic `event-outcomes` using the `eventId` as key (Spring Kafka JSON-serializes the object).
-- The Kafka consumer receives the `SportEventOutcome` object, loads bets by `eventId` from H2, filters only winning bets (`bet.eventWinnerId == sportEventOutcome.eventWinnerId`), and sends settlement messages via the mocked RocketMQ producer.
-- Settlement messages are logged with prefix: `[MOCK ROCKETMQ]`.
+- The Kafka consumer receives the `SportEventOutcome` object, loads bets by `eventId` from H2, filters only winning bets (`bet.eventWinnerId == sportEventOutcome.eventWinnerId`), and sends settlement messages via RocketMQ if a broker/template is available; otherwise it logs them as a mock fallback.
+- When a real broker is used, logs contain `[ROCKETMQ]` entries; when falling back to logging only, logs contain `[MOCK ROCKETMQ]` entries.
 
 - List all bets (seeded):
 
@@ -151,7 +151,7 @@ The application seeds three bets on startup (see `seed/DataInitializer.java`):
 - The consumer will find 2 bets for `EVT-1` but only `betId=1` is a winner; only that settlement will be logged.
 
 ## Notes & Assumptions
-- RocketMQ producer is intentionally mocked (logs). No RocketMQ installation is required.
+- RocketMQ is optional. If a NameServer/Broker is reachable, settlements are sent via RocketMQ; otherwise, the app logs the payloads as a mock fallback. You do not need RocketMQ running to develop or test locally.
 - Kafka configuration uses `localhost:9092` by default; see `docker-compose.yml` for a quick local cluster.
 
 ## Potential Improvements (Next Steps)
