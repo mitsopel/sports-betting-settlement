@@ -28,11 +28,12 @@ public class RocketMQProducer {
         if (nonNull(rocketMQTemplate)) {
             try {
                 rocketMQTemplate.convertAndSend(betSettlementsTopic, betSettlementMessage);
+
                 log.info("[ROCKETMQ] Sent to topic {}: {}", betSettlementsTopic, betSettlementMessage);
                 log.info("[ROCKETMQ] User with id {} has won and the payout is: {} EUR.",
                     betSettlementMessage.getUserId(), betSettlementMessage.getPayoutAmount());
             } catch (Exception ex) {
-                log.error("[ROCKETMQ] Failed to send to topic {}. Falling back to log-only. Payload: {}",
+                log.error("[ROCKETMQ] Failed to send to topic {}. Falling back to log-only. Message: {}",
                     betSettlementsTopic, betSettlementMessage, ex);
                 logMock(betSettlementMessage);
             }

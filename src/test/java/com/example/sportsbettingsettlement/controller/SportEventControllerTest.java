@@ -21,6 +21,11 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(SportEventController.class)
 class SportEventControllerTest {
 
+    private static final String ENDPOINT_SPORT_EVENT_OUTCOMES = "/sport-event/outcomes";
+    private static final String EVENT_ID_EVT_1 = "EVT-1";
+    private static final String EVENT_ONE = "Event One";
+    private static final String WINNER_ID_WIN_1 = "WIN-1";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -35,12 +40,12 @@ class SportEventControllerTest {
 
     @Test
     void shouldAddSportEventOutcome() throws Exception {
-        SportEventOutcomeDto dto = new SportEventOutcomeDto("EVT-1", "Event One", "WIN-1");
-        SportEventOutcome domain = new SportEventOutcome("EVT-1", "Event One", "WIN-1");
+        SportEventOutcomeDto dto = new SportEventOutcomeDto(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1);
+        SportEventOutcome domain = new SportEventOutcome(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1);
         when(sportEventOutcomeMapper.toDomain(any())).thenReturn(domain);
         doNothing().when(sportEventService).publish(domain);
 
-        mockMvc.perform(post("/sport-event/outcomes")
+        mockMvc.perform(post(ENDPOINT_SPORT_EVENT_OUTCOMES)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
             .andExpect(status().isOk());
@@ -49,9 +54,9 @@ class SportEventControllerTest {
     @Test
     void shouldAFailToAdSportEventOutcomeAndThrowBadRequestWhenDtoIsInvalid() throws Exception {
         // Missing eventId and eventWinnerId
-        String invalidJson = "{\"eventName\":\"Event One\"}";
+        String invalidJson = "{\"eventName\":\"" + EVENT_ONE + "\"}";
 
-        mockMvc.perform(post("/sport-event/outcomes")
+        mockMvc.perform(post(ENDPOINT_SPORT_EVENT_OUTCOMES)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(invalidJson))
             .andExpect(status().isBadRequest());

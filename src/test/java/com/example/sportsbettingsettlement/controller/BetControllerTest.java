@@ -20,6 +20,14 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(BetController.class)
 class BetControllerTest {
 
+    private static final String ENDPOINT_BETS = "/bets";
+    private static final String EVENT_ID_EVT_1 = "EVT-1";
+    private static final String EVENT_ID_EVT_2 = "EVT-2";
+    private static final String MARKET_ID_MKT_1 = "MKT-1";
+    private static final String MARKET_ID_MKT_2 = "MKT-2";
+    private static final String WINNER_ID_WIN_1 = "WIN-1";
+    private static final String WINNER_ID_WIN_2 = "WIN-2";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -31,19 +39,19 @@ class BetControllerTest {
 
     @Test
     void shouldFindAllBets() throws Exception {
-        List<Bet> domain = List.of(
-            new Bet(1L, 101L, "EVT-1", "MKT-1", "WIN-1", BigDecimal.TEN),
-            new Bet(2L, 102L, "EVT-2", "MKT-2", "WIN-2", BigDecimal.ONE)
+        List<Bet> betList = List.of(
+            new Bet(1L, 101L, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_1, BigDecimal.TEN),
+            new Bet(2L, 102L, EVENT_ID_EVT_2, MARKET_ID_MKT_2, WINNER_ID_WIN_2, BigDecimal.ONE)
         );
-        when(betService.findAll()).thenReturn(domain);
-        when(betMapper.toDtoList(domain)).thenReturn(List.of(
-            new BetDto(1L, 101L, "EVT-1", "MKT-1", "WIN-1", BigDecimal.TEN),
-            new BetDto(2L, 102L, "EVT-2", "MKT-2", "WIN-2", BigDecimal.ONE)
+        when(betService.findAll()).thenReturn(betList);
+        when(betMapper.toDtoList(betList)).thenReturn(List.of(
+            new BetDto(1L, 101L, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_1, BigDecimal.TEN),
+            new BetDto(2L, 102L, EVENT_ID_EVT_2, MARKET_ID_MKT_2, WINNER_ID_WIN_2, BigDecimal.ONE)
         ));
 
-        mockMvc.perform(get("/bets"))
+        mockMvc.perform(get(ENDPOINT_BETS))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].betId").value(1))
-            .andExpect(jsonPath("$[1].eventId").value("EVT-2"));
+            .andExpect(jsonPath("$[1].eventId").value(EVENT_ID_EVT_2));
     }
 }

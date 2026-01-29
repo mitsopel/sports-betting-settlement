@@ -28,6 +28,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class SportEventOutcomeServiceImplTest {
 
+    private static final String EVENT_ID_EVT_1 = "EVT-1";
+    private static final String EVENT_ONE = "Event One";
+    private static final String MARKET_ID_MKT_1 = "MKT-1";
+    private static final String WINNER_ID_WIN_1 = "WIN-1";
+    private static final String WINNER_ID_WIN_2 = "WIN-2";
+    private static final String WINNER_ID_WIN_3 = "WIN-3";
+
     @Mock
     private KafkaProducer kafkaProducer;
 
@@ -45,7 +52,7 @@ class SportEventOutcomeServiceImplTest {
 
     @Test
     void shouldPublishSportEventOutcome() {
-        SportEventOutcome sportEventOutcome = new SportEventOutcome("EVT-1", "Event One", "WIN-1");
+        SportEventOutcome sportEventOutcome = new SportEventOutcome(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1);
 
         doNothing().when(kafkaProducer).publish(sportEventOutcome);
         sportEventService.publish(sportEventOutcome);
@@ -55,29 +62,29 @@ class SportEventOutcomeServiceImplTest {
 
     @Test
     void shouldHandleSettlementsForSportEventOutcome() {
-        BetEntity winner = new BetEntity(1L, 101L, "EVT-1", "MKT-1", "WIN-1", BigDecimal.TEN);
-        BetEntity loser = new BetEntity(2L, 102L, "EVT-1", "MKT-1", "WIN-2", BigDecimal.valueOf(20));
-        when(betRepository.findByEventId("EVT-1")).thenReturn(List.of(winner, loser));
+        BetEntity winner = new BetEntity(1L, 101L, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_1, BigDecimal.TEN);
+        BetEntity loser = new BetEntity(2L, 102L, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_2, BigDecimal.valueOf(20));
+        when(betRepository.findByEventId(EVENT_ID_EVT_1)).thenReturn(List.of(winner, loser));
 
         ArgumentCaptor<BetSettlementMessage> captor = ArgumentCaptor.forClass(BetSettlementMessage.class);
         doNothing().when(rocketMQProducer).send(any());
 
-        sportEventService.handleSettlements(new SportEventOutcome("EVT-1", "Event One", "WIN-1"));
+        sportEventService.handleSettlements(new SportEventOutcome(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1));
 
         verify(rocketMQProducer, times(1)).send(captor.capture());
         BetSettlementMessage betSettlementMessage = captor.getValue();
         assertThat(betSettlementMessage.getBetId()).isEqualTo(1L);
-        assertThat(betSettlementMessage.getEventWinnerId()).isEqualTo("WIN-1");
+        assertThat(betSettlementMessage.getEventWinnerId()).isEqualTo(WINNER_ID_WIN_1);
         assertThat(betSettlementMessage.getPayoutAmount()).isEqualByComparingTo(BigDecimal.valueOf(20));
     }
 
     @Test
     void shouldNotSendAnySettlementForSportEventOutcomeWhenNoWinners() {
-        BetEntity loser1 = new BetEntity(1L, 101L, "EVT-1", "MKT-1", "WIN-2", BigDecimal.TEN);
-        BetEntity loser2 = new BetEntity(2L, 102L, "EVT-1", "MKT-1", "WIN-3", BigDecimal.valueOf(20));
-        when(betRepository.findByEventId("EVT-1")).thenReturn(List.of(loser1, loser2));
+        BetEntity loser1 = new BetEntity(1L, 101L, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_2, BigDecimal.TEN);
+        BetEntity loser2 = new BetEntity(2L, 102L, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_3, BigDecimal.valueOf(20));
+        when(betRepository.findByEventId(EVENT_ID_EVT_1)).thenReturn(List.of(loser1, loser2));
 
-        sportEventService.handleSettlements(new SportEventOutcome("EVT-1", "Event One", "WIN-1"));
+        sportEventService.handleSettlements(new SportEventOutcome(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1));
 
         verify(rocketMQProducer, times(0)).send(any());
     }
