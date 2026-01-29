@@ -16,15 +16,16 @@ import com.example.sportsbettingsettlement.rocketmq.RocketMQProducer;
 import com.example.sportsbettingsettlement.mapper.BetMapper;
 import java.math.BigDecimal;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 class SportEventOutcomeServiceImplTest {
 
     @Mock
@@ -41,11 +42,6 @@ class SportEventOutcomeServiceImplTest {
 
     @InjectMocks
     private SportEventServiceImpl sportEventService;
-
-    @BeforeEach
-    void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void shouldPublishSportEventOutcome() {
@@ -80,7 +76,6 @@ class SportEventOutcomeServiceImplTest {
         BetEntity loser1 = new BetEntity(1L, 101L, "EVT-1", "MKT-1", "WIN-2", BigDecimal.TEN);
         BetEntity loser2 = new BetEntity(2L, 102L, "EVT-1", "MKT-1", "WIN-3", BigDecimal.valueOf(20));
         when(betRepository.findByEventId("EVT-1")).thenReturn(List.of(loser1, loser2));
-        doNothing().when(rocketMQProducer).send(any());
 
         sportEventService.handle(new SportEventOutcome("EVT-1", "Event One", "WIN-1"));
 

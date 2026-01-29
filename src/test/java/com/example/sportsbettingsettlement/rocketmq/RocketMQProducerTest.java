@@ -6,10 +6,12 @@ import com.example.sportsbettingsettlement.domain.BetSettlementMessage;
 import java.math.BigDecimal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+@ExtendWith(MockitoExtension.class)
 class RocketMQProducerTest {
 
     @InjectMocks
@@ -17,7 +19,6 @@ class RocketMQProducerTest {
 
     @BeforeEach
     void setup() {
-        MockitoAnnotations.openMocks(this);
         ReflectionTestUtils.setField(rocketMQProducer, "betSettlementsTopic", "bet-settlements");
     }
 

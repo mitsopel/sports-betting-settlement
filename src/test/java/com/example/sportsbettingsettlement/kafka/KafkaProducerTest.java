@@ -9,12 +9,14 @@ import com.example.sportsbettingsettlement.domain.SportEventOutcome;
 import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.util.ReflectionTestUtils;
 
+@ExtendWith(MockitoExtension.class)
 class KafkaProducerTest {
 
     @Mock
@@ -25,7 +27,6 @@ class KafkaProducerTest {
 
     @BeforeEach
     void setup() {
-        MockitoAnnotations.openMocks(this);
         ReflectionTestUtils.setField(kafkaProducer, "eventOutcomesTopic", "event-outcomes");
     }
 

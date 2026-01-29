@@ -9,14 +9,15 @@ import com.example.sportsbettingsettlement.entity.BetEntity;
 import com.example.sportsbettingsettlement.repository.BetRepository;
 import java.math.BigDecimal;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 class BetServiceImplTest {
 
     @Mock
@@ -27,11 +28,6 @@ class BetServiceImplTest {
 
     @InjectMocks
     private BetServiceImpl betService;
-
-    @BeforeEach
-    void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void shouldFindAllBets() {

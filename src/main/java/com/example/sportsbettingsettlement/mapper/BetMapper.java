@@ -11,8 +11,10 @@ import org.mapstruct.ReportingPolicy;
 public interface BetMapper {
 
     Bet toDomain(BetEntity entity);
+
     List<Bet> toDomainList(List<BetEntity> entities);
 
     BetDto toDto(Bet domain);
+
     List<BetDto> toDtoList(List<Bet> domains);
 }

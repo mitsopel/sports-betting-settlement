@@ -6,6 +6,7 @@ import lombok.Value;
 
 @Value
 public class SportEventOutcome {
+
     String eventId;
     String eventName;
     String eventWinnerId;

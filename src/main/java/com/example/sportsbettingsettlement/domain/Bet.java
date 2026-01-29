@@ -6,6 +6,7 @@ import lombok.Value;
 
 @Value
 public class Bet {
+
     Long betId;
     Long userId;
     String eventId;

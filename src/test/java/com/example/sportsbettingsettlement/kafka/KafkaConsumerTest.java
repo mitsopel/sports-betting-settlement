@@ -5,12 +5,13 @@ import static org.mockito.Mockito.verify;
 
 import com.example.sportsbettingsettlement.domain.SportEventOutcome;
 import com.example.sportsbettingsettlement.service.SportEventService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 class KafkaConsumerTest {
 
     @Mock
@@ -18,11 +19,6 @@ class KafkaConsumerTest {
 
     @InjectMocks
     private KafkaConsumer kafkaConsumer;
-
-    @BeforeEach
-    void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void shouldConsumeSportEventOutcome() {
