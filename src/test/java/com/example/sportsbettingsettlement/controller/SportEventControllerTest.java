@@ -45,4 +45,15 @@ class SportEventControllerTest {
                 .content(objectMapper.writeValueAsString(dto)))
             .andExpect(status().isOk());
     }
+
+    @Test
+    void shouldAFailToAdSportEventOutcomeAndThrowBadRequestWhenDtoIsInvalid() throws Exception {
+        // Missing eventId and eventWinnerId
+        String invalidJson = "{\"eventName\":\"Event One\"}";
+
+        mockMvc.perform(post("/sport-event/outcomes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(invalidJson))
+            .andExpect(status().isBadRequest());
+    }
 }

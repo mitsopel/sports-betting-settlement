@@ -24,4 +24,10 @@ class BetRepositoryTest {
         List<BetEntity> betEntities = betRepository.findByEventId("EVT-1");
         assertThat(betEntities).extracting(BetEntity::getBetId).containsExactlyInAnyOrder(1L, 2L);
     }
+
+    @Test
+    void shouldReturnEmptyListWhenEventIdNotFound() {
+        List<BetEntity> betEntities = betRepository.findByEventId("NON-EXISTENT");
+        assertThat(betEntities).isEmpty();
+    }
 }

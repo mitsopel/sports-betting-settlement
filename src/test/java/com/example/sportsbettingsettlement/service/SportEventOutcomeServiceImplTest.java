@@ -74,4 +74,16 @@ class SportEventOutcomeServiceImplTest {
         assertThat(betSettlementMessage.getEventWinnerId()).isEqualTo("WIN-1");
         assertThat(betSettlementMessage.getPayload()).isEqualByComparingTo(BigDecimal.valueOf(20));
     }
+
+    @Test
+    void shouldHandleSportEventOutcomeAndNotSendAnySettlementWhenNoWinners() {
+        BetEntity loser1 = new BetEntity(1L, 101L, "EVT-1", "MKT-1", "WIN-2", BigDecimal.TEN);
+        BetEntity loser2 = new BetEntity(2L, 102L, "EVT-1", "MKT-1", "WIN-3", BigDecimal.valueOf(20));
+        when(betRepository.findByEventId("EVT-1")).thenReturn(List.of(loser1, loser2));
+        doNothing().when(rocketMQProducer).send(any());
+
+        sportEventService.handle(new SportEventOutcome("EVT-1", "Event One", "WIN-1"));
+
+        verify(rocketMQProducer, times(0)).send(any());
+    }
 }

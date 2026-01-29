@@ -8,7 +8,7 @@ What’s Implemented
 - Kafka producer and consumer with configuration externalized to application.properties.
 - In-memory H2 database with seed data for bets.
 - Winner filtering: only bets that predicted the actual winner are sent to settlements.
-- RocketMQ producer mocked via logging (no RocketMQ setup required).
+- RocketMQ producer mocked via logging (no actual RocketMQ setup).
 
 Tech Stack
 - Java 17
@@ -21,15 +21,15 @@ Tech Stack
 
 Project Structure (key parts)
 - controller/SportEventController.java: REST endpoint to publish outcomes.
-- kafka/KafkaProducer.java: Publishes outcome JSON to Kafka.
-- kafka/KafkaConsumer.java: Consumes from Kafka and triggers handling.
+- kafka/KafkaProducer.java: Publishes SportEventOutcome objects to Kafka (JSON-serialized via Spring Kafka).
+- kafka/KafkaConsumer.java: Consumes SportEventOutcome objects from Kafka and triggers handling.
 - service/SportEventServiceImpl.java: Matches bets by eventId, filters winners, and builds settlement messages.
 - repository/BetRepository.java: JPA repository.
 - rocketmq/RocketMQProducer.java: Mock RocketMQ producer (logs payloads).
 - domain/: Bet, SportEventOutcome, BetSettlementMessage (domain models).
 - dto/: BetDto, SportEventOutcomeDto (API layer DTOs).
 - mapper/: MapStruct mappers for DTO/Domain/Entity transformations.
-- persistence/BetEntity.java: JPA entity for bets.
+- entity/BetEntity.java: JPA entity for bets.
 - seed/DataInitializer.java: Seeds some bets into H2 at startup.
 
 Prerequisites
@@ -79,8 +79,8 @@ API Usage
   }
 
   Behavior:
-  - The API publishes the JSON to Kafka topic event-outcomes using the eventId as key.
-  - The Kafka consumer reads the message, loads bets by eventId from H2, filters only winning bets (bet.eventWinnerId == sportEventOutcome.eventWinnerId), and sends settlement messages via the mocked RocketMQ producer.
+  - The API publishes a SportEventOutcome object to Kafka topic event-outcomes using the eventId as key (Spring Kafka JSON-serializes the object).
+  - The Kafka consumer receives the SportEventOutcome object, loads bets by eventId from H2, filters only winning bets (bet.eventWinnerId == sportEventOutcome.eventWinnerId), and sends settlement messages via the mocked RocketMQ producer.
   - Settlement messages are logged with prefix: [MOCK ROCKETMQ]
 
 - List all bets (seeded):
@@ -105,6 +105,11 @@ Potential Improvements (Next Steps)
 - Extend settlement payload and persistence of settlement results.
 - Add basic validation and error handling for the API.
 - Add OpenAPI/Swagger docs for the REST API.
+
+Testing
+- Run all tests: ./gradlew test
+- Run one test class: ./gradlew test --tests "com.example.sportsbettingsettlement.*YourTestClassName*"
+- Reports: build/reports/tests/test/index.html
 
 Troubleshooting
 - If the API returns errors when publishing to Kafka, ensure Docker Compose stack is up and Kafka listens on localhost:9092.

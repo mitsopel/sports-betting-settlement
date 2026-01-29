@@ -45,4 +45,13 @@ class BetServiceImplTest {
         assertThat(bets.get(0).getBetId()).isEqualTo(1L);
         assertThat(bets.get(1).getEventId()).isEqualTo("EVT-2");
     }
+
+    @Test
+    void shouldReturnEmptyListWhenNoBets() {
+        when(betRepository.findAll()).thenReturn(List.of());
+
+        List<Bet> bets = betService.findAll();
+
+        assertThat(bets).isEmpty();
+    }
 }
