@@ -15,10 +15,10 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class KafkaProducer {
 
+    private final KafkaTemplate<String, SportEventOutcome> sportEventOutcomeKafkaTemplate;
+
     @Value("${kafka.topics.event-outcomes}")
     private String eventOutcomesTopic;
-
-    private final KafkaTemplate<String, SportEventOutcome> sportEventOutcomeKafkaTemplate;
 
     public void publish(SportEventOutcome sportEventOutcome) {
         try {

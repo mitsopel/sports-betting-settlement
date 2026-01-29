@@ -17,7 +17,8 @@ class SportEventOutcomeMapperTest {
 
     @Test
     void shouldMapAllFieldsToDomain() {
-        SportEventOutcomeDto sportEventOutcomeDto = new SportEventOutcomeDto(EVENT_ID_EVT_1, EVENT_NAME_EVENT_ONE, WINNER_ID_WIN_1);
+        SportEventOutcomeDto sportEventOutcomeDto = new SportEventOutcomeDto(EVENT_ID_EVT_1, EVENT_NAME_EVENT_ONE,
+            WINNER_ID_WIN_1);
         SportEventOutcome sportEventOutcome = sportEventOutcomeMapper.toDomain(sportEventOutcomeDto);
         assertThat(sportEventOutcome.getEventId()).isEqualTo(EVENT_ID_EVT_1);
         assertThat(sportEventOutcome.getEventName()).isEqualTo(EVENT_NAME_EVENT_ONE);

@@ -3,16 +3,15 @@ package com.example.sportsbettingsettlement.service;
 
 import com.example.sportsbettingsettlement.domain.Bet;
 import com.example.sportsbettingsettlement.domain.BetSettlementMessage;
-import com.example.sportsbettingsettlement.mapper.BetMapper;
-import com.example.sportsbettingsettlement.entity.BetEntity;
 import com.example.sportsbettingsettlement.domain.SportEventOutcome;
+import com.example.sportsbettingsettlement.entity.BetEntity;
 import com.example.sportsbettingsettlement.kafka.KafkaProducer;
-import com.example.sportsbettingsettlement.rocketmq.RocketMQProducer;
+import com.example.sportsbettingsettlement.mapper.BetMapper;
 import com.example.sportsbettingsettlement.repository.BetRepository;
+import com.example.sportsbettingsettlement.rocketmq.RocketMQProducer;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

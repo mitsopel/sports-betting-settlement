@@ -7,13 +7,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.example.sportsbettingsettlement.domain.SportEventOutcome;
-import com.example.sportsbettingsettlement.kafka.KafkaProducer;
-import com.example.sportsbettingsettlement.entity.BetEntity;
-import com.example.sportsbettingsettlement.repository.BetRepository;
 import com.example.sportsbettingsettlement.domain.BetSettlementMessage;
-import com.example.sportsbettingsettlement.rocketmq.RocketMQProducer;
+import com.example.sportsbettingsettlement.domain.SportEventOutcome;
+import com.example.sportsbettingsettlement.entity.BetEntity;
+import com.example.sportsbettingsettlement.kafka.KafkaProducer;
 import com.example.sportsbettingsettlement.mapper.BetMapper;
+import com.example.sportsbettingsettlement.repository.BetRepository;
+import com.example.sportsbettingsettlement.rocketmq.RocketMQProducer;
 import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -63,7 +63,8 @@ class SportEventOutcomeServiceImplTest {
     @Test
     void shouldHandleSettlementsForSportEventOutcome() {
         BetEntity winner = new BetEntity(1L, 101L, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_1, BigDecimal.TEN);
-        BetEntity loser = new BetEntity(2L, 102L, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_2, BigDecimal.valueOf(20));
+        BetEntity loser = new BetEntity(2L, 102L, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_2,
+            BigDecimal.valueOf(20));
         when(betRepository.findByEventId(EVENT_ID_EVT_1)).thenReturn(List.of(winner, loser));
 
         ArgumentCaptor<BetSettlementMessage> captor = ArgumentCaptor.forClass(BetSettlementMessage.class);
@@ -81,7 +82,8 @@ class SportEventOutcomeServiceImplTest {
     @Test
     void shouldNotSendAnySettlementForSportEventOutcomeWhenNoWinners() {
         BetEntity loser1 = new BetEntity(1L, 101L, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_2, BigDecimal.TEN);
-        BetEntity loser2 = new BetEntity(2L, 102L, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_3, BigDecimal.valueOf(20));
+        BetEntity loser2 = new BetEntity(2L, 102L, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_3,
+            BigDecimal.valueOf(20));
         when(betRepository.findByEventId(EVENT_ID_EVT_1)).thenReturn(List.of(loser1, loser2));
 
         sportEventService.handleSettlements(new SportEventOutcome(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1));

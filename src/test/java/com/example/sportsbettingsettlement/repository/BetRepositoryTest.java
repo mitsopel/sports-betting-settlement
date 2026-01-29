@@ -32,9 +32,12 @@ class BetRepositoryTest {
 
     @Test
     void shouldFindByEventIdAndReturnOnlyMatchingBets() {
-        betRepository.save(new BetEntity(BET_ID_1, USER_ID_101, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_1, BigDecimal.TEN));
-        betRepository.save(new BetEntity(BET_ID_2, USER_ID_102, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_2, BigDecimal.ONE));
-        betRepository.save(new BetEntity(BET_ID_3, USER_ID_103, EVENT_ID_EVT_2, MARKET_ID_MKT_2, WINNER_ID_WIN_3, BigDecimal.valueOf(5)));
+        betRepository.save(
+            new BetEntity(BET_ID_1, USER_ID_101, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_1, BigDecimal.TEN));
+        betRepository.save(
+            new BetEntity(BET_ID_2, USER_ID_102, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_2, BigDecimal.ONE));
+        betRepository.save(new BetEntity(BET_ID_3, USER_ID_103, EVENT_ID_EVT_2, MARKET_ID_MKT_2, WINNER_ID_WIN_3,
+            BigDecimal.valueOf(5)));
 
         List<BetEntity> betEntities = betRepository.findByEventId(EVENT_ID_EVT_1);
         assertThat(betEntities).extracting(BetEntity::getBetId).containsExactlyInAnyOrder(BET_ID_1, BET_ID_2);

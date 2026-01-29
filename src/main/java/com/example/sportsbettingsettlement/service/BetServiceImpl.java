@@ -1,8 +1,8 @@
 package com.example.sportsbettingsettlement.service;
 
 import com.example.sportsbettingsettlement.domain.Bet;
-import com.example.sportsbettingsettlement.mapper.BetMapper;
 import com.example.sportsbettingsettlement.entity.BetEntity;
+import com.example.sportsbettingsettlement.mapper.BetMapper;
 import com.example.sportsbettingsettlement.repository.BetRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

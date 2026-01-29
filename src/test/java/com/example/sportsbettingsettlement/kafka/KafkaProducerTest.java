@@ -43,7 +43,8 @@ class KafkaProducerTest {
 
         kafkaProducer.publish(sportEventOutcome);
 
-        verify(sportEventOutcomeKafkaTemplate, times(1)).send(eq(TOPIC_EVENT_OUTCOMES), eq(EVENT_ID_EVT_1), eq(sportEventOutcome));
+        verify(sportEventOutcomeKafkaTemplate, times(1)).send(eq(TOPIC_EVENT_OUTCOMES), eq(EVENT_ID_EVT_1),
+            eq(sportEventOutcome));
     }
 
     @Test
@@ -56,7 +57,8 @@ class KafkaProducerTest {
         // Should catch exception internally and not throw
         kafkaProducer.publish(sportEventOutcome);
 
-        verify(sportEventOutcomeKafkaTemplate, times(1)).send(eq(TOPIC_EVENT_OUTCOMES), eq(EVENT_ID_EVT_1), eq(sportEventOutcome));
+        verify(sportEventOutcomeKafkaTemplate, times(1)).send(eq(TOPIC_EVENT_OUTCOMES), eq(EVENT_ID_EVT_1),
+            eq(sportEventOutcome));
     }
 
     @Test
@@ -69,6 +71,7 @@ class KafkaProducerTest {
 
         kafkaProducer.publish(sportEventOutcome);
 
-        verify(sportEventOutcomeKafkaTemplate, times(1)).send(eq(TOPIC_EVENT_OUTCOMES), eq(EVENT_ID_EVT_1), eq(sportEventOutcome));
+        verify(sportEventOutcomeKafkaTemplate, times(1)).send(eq(TOPIC_EVENT_OUTCOMES), eq(EVENT_ID_EVT_1),
+            eq(sportEventOutcome));
     }
 }

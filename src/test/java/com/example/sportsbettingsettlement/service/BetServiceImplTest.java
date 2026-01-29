@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import com.example.sportsbettingsettlement.domain.Bet;
-import com.example.sportsbettingsettlement.mapper.BetMapper;
 import com.example.sportsbettingsettlement.entity.BetEntity;
+import com.example.sportsbettingsettlement.mapper.BetMapper;
 import com.example.sportsbettingsettlement.repository.BetRepository;
 import java.math.BigDecimal;
 import java.util.List;
@@ -42,8 +42,10 @@ class BetServiceImplTest {
 
     @Test
     void shouldFindAllBets() {
-        BetEntity betEntity1 = new BetEntity(BET_ID_1, USER_ID_101, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_1, BigDecimal.TEN);
-        BetEntity betEntity2 = new BetEntity(BET_ID_2, USER_ID_102, EVENT_ID_EVT_2, MARKET_ID_MKT_2, WINNER_ID_WIN_2, BigDecimal.ONE);
+        BetEntity betEntity1 = new BetEntity(BET_ID_1, USER_ID_101, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_1,
+            BigDecimal.TEN);
+        BetEntity betEntity2 = new BetEntity(BET_ID_2, USER_ID_102, EVENT_ID_EVT_2, MARKET_ID_MKT_2, WINNER_ID_WIN_2,
+            BigDecimal.ONE);
         when(betRepository.findAll()).thenReturn(List.of(betEntity1, betEntity2));
 
         List<Bet> bets = betService.findAll();
