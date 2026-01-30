@@ -1,6 +1,6 @@
 package com.example.sportsbettingsettlement.kafka;
 
-import static java.util.Objects.nonNull;
+import static java.util.Objects.isNull;
 
 import com.example.sportsbettingsettlement.domain.SportEventOutcome;
 import lombok.RequiredArgsConstructor;
@@ -24,14 +24,15 @@ public class KafkaProducer {
         try {
             sportEventOutcomeKafkaTemplate.send(eventOutcomesTopic, sportEventOutcome.getEventId(), sportEventOutcome)
                 .whenCompleteAsync((response, exception) -> {
-                    if (nonNull(exception)) {
+                    if (isNull(exception)) {
+                        log.info("Sent sportEventOutcome to Kafka: {}", sportEventOutcome);
+                    } else {
                         logErrorMessage(sportEventOutcome, exception);
                     }
                 });
         } catch (KafkaException exception) {
             logErrorMessage(sportEventOutcome, exception);
         }
-        log.info("Sent sportEventOutcome to Kafka: {}", sportEventOutcome);
     }
 
     private void logErrorMessage(final Object message, final Throwable exception) {

@@ -39,7 +39,8 @@ class SportEventControllerTest {
 
     @Test
     void shouldAddSportEventOutcome() throws Exception {
-        SportEventOutcomeDto sportEventOutcomeDto = new SportEventOutcomeDto(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1);
+        SportEventOutcomeDto sportEventOutcomeDto = new SportEventOutcomeDto(EVENT_ID_EVT_1, EVENT_ONE,
+            WINNER_ID_WIN_1);
         SportEventOutcome sportEventOutcome = new SportEventOutcome(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1);
         when(sportEventOutcomeMapper.toDomain(sportEventOutcomeDto)).thenReturn(sportEventOutcome);
         doNothing().when(sportEventService).add(sportEventOutcome);
