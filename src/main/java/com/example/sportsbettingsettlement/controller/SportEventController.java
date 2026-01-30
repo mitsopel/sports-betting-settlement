@@ -25,7 +25,7 @@ public class SportEventController {
     @PostMapping(path = "/outcomes", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<String> add(@Valid @RequestBody SportEventOutcomeDto sportEventOutcomeDto) {
         SportEventOutcome sportEventOutcome = sportEventOutcomeMapper.toDomain(sportEventOutcomeDto);
-        sportEventService.publish(sportEventOutcome);
+        sportEventService.add(sportEventOutcome);
         return ResponseEntity.ok("Sport event outcome published to Kafka");
     }
 }

@@ -17,6 +17,6 @@ public class KafkaConsumer {
     @KafkaListener(topics = "${kafka.topics.event-outcomes}", groupId = "${kafka.consumer.group-id}")
     public void consume(SportEventOutcome sportEventOutcome) {
         log.info("Received sportEventOutcome from Kafka: {}", sportEventOutcome);
-        sportEventService.handleSettlements(sportEventOutcome);
+        sportEventService.handleBetSettlements(sportEventOutcome);
     }
 }

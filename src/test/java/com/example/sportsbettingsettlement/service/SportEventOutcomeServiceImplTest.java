@@ -34,6 +34,13 @@ class SportEventOutcomeServiceImplTest {
     private static final String WINNER_ID_WIN_1 = "WIN-1";
     private static final String WINNER_ID_WIN_2 = "WIN-2";
     private static final String WINNER_ID_WIN_3 = "WIN-3";
+    private static final long BET_ID_1 = 1L;
+    private static final long BET_ID_2 = 2L;
+    private static final long USER_ID_101 = 101L;
+    private static final long USER_ID_102 = 102L;
+    private static final BigDecimal BET_AMOUNT_TEN = BigDecimal.TEN;
+    private static final BigDecimal BET_AMOUNT_TWENTY = BigDecimal.valueOf(20);
+    private static final BigDecimal EXPECTED_PAYOUT_TWENTY = BigDecimal.valueOf(20);
 
     @Mock
     private KafkaProducer kafkaProducer;
@@ -55,38 +62,40 @@ class SportEventOutcomeServiceImplTest {
         SportEventOutcome sportEventOutcome = new SportEventOutcome(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1);
 
         doNothing().when(kafkaProducer).publish(sportEventOutcome);
-        sportEventService.publish(sportEventOutcome);
+        sportEventService.add(sportEventOutcome);
 
         verify(kafkaProducer, times(1)).publish(sportEventOutcome);
     }
 
     @Test
-    void shouldHandleSettlementsForSportEventOutcome() {
-        BetEntity winner = new BetEntity(1L, 101L, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_1, BigDecimal.TEN);
-        BetEntity loser = new BetEntity(2L, 102L, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_2,
-            BigDecimal.valueOf(20));
+    void shouldHandleBetSettlementsForSportEventOutcome() {
+        BetEntity winner = new BetEntity(BET_ID_1, USER_ID_101, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_1,
+            BET_AMOUNT_TEN);
+        BetEntity loser = new BetEntity(BET_ID_2, USER_ID_102, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_2,
+            BET_AMOUNT_TWENTY);
         when(betRepository.findByEventId(EVENT_ID_EVT_1)).thenReturn(List.of(winner, loser));
 
         ArgumentCaptor<BetSettlementMessage> captor = ArgumentCaptor.forClass(BetSettlementMessage.class);
         doNothing().when(rocketMQProducer).send(any());
 
-        sportEventService.handleSettlements(new SportEventOutcome(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1));
+        sportEventService.handleBetSettlements(new SportEventOutcome(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1));
 
         verify(rocketMQProducer, times(1)).send(captor.capture());
         BetSettlementMessage betSettlementMessage = captor.getValue();
-        assertThat(betSettlementMessage.getBetId()).isEqualTo(1L);
+        assertThat(betSettlementMessage.getBetId()).isEqualTo(BET_ID_1);
         assertThat(betSettlementMessage.getEventWinnerId()).isEqualTo(WINNER_ID_WIN_1);
-        assertThat(betSettlementMessage.getPayoutAmount()).isEqualByComparingTo(BigDecimal.valueOf(20));
+        assertThat(betSettlementMessage.getPayoutAmount()).isEqualByComparingTo(EXPECTED_PAYOUT_TWENTY);
     }
 
     @Test
-    void shouldNotSendAnySettlementForSportEventOutcomeWhenNoWinners() {
-        BetEntity loser1 = new BetEntity(1L, 101L, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_2, BigDecimal.TEN);
-        BetEntity loser2 = new BetEntity(2L, 102L, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_3,
-            BigDecimal.valueOf(20));
+    void shouldNotSendAnyBetSettlementForSportEventOutcomeWhenNoWinners() {
+        BetEntity loser1 = new BetEntity(BET_ID_1, USER_ID_101, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_2,
+            BET_AMOUNT_TEN);
+        BetEntity loser2 = new BetEntity(BET_ID_2, USER_ID_102, EVENT_ID_EVT_1, MARKET_ID_MKT_1, WINNER_ID_WIN_3,
+            BET_AMOUNT_TWENTY);
         when(betRepository.findByEventId(EVENT_ID_EVT_1)).thenReturn(List.of(loser1, loser2));
 
-        sportEventService.handleSettlements(new SportEventOutcome(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1));
+        sportEventService.handleBetSettlements(new SportEventOutcome(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1));
 
         verify(rocketMQProducer, times(0)).send(any());
     }

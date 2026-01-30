@@ -40,14 +40,14 @@ class SportEventControllerTest {
 
     @Test
     void shouldAddSportEventOutcome() throws Exception {
-        SportEventOutcomeDto dto = new SportEventOutcomeDto(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1);
-        SportEventOutcome domain = new SportEventOutcome(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1);
-        when(sportEventOutcomeMapper.toDomain(any())).thenReturn(domain);
-        doNothing().when(sportEventService).publish(domain);
+        SportEventOutcomeDto sportEventOutcomeDto = new SportEventOutcomeDto(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1);
+        SportEventOutcome sportEventOutcome = new SportEventOutcome(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1);
+        when(sportEventOutcomeMapper.toDomain(any())).thenReturn(sportEventOutcome);
+        doNothing().when(sportEventService).add(sportEventOutcome);
 
         mockMvc.perform(post(ENDPOINT_SPORT_EVENT_OUTCOMES)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dto)))
+                .content(objectMapper.writeValueAsString(sportEventOutcomeDto)))
             .andExpect(status().isOk());
     }
 

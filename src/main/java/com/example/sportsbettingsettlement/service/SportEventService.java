@@ -4,7 +4,7 @@ import com.example.sportsbettingsettlement.domain.SportEventOutcome;
 
 public interface SportEventService {
 
-    void publish(SportEventOutcome sportEventOutcome);
+    void add(SportEventOutcome sportEventOutcome);
 
-    void handleSettlements(SportEventOutcome sportEventOutcome);
+    void handleBetSettlements(SportEventOutcome sportEventOutcome);
 }

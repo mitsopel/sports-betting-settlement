@@ -23,12 +23,12 @@ public class SportEventServiceImpl implements SportEventService {
     private final BetMapper betMapper;
 
     @Override
-    public void publish(SportEventOutcome sportEventOutcome) {
+    public void add(SportEventOutcome sportEventOutcome) {
         kafkaProducer.publish(sportEventOutcome);
     }
 
     @Override
-    public void handleSettlements(SportEventOutcome sportEventOutcome) {
+    public void handleBetSettlements(SportEventOutcome sportEventOutcome) {
         List<BetEntity> betEntityList = betRepository.findByEventId(sportEventOutcome.getEventId());
         List<Bet> betDomainList = betMapper.toDomainList(betEntityList);
 

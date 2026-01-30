@@ -30,6 +30,6 @@ class KafkaConsumerTest {
 
         kafkaConsumer.consume(sportEventOutcome);
 
-        verify(sportEventService, times(1)).handleSettlements(sportEventOutcome);
+        verify(sportEventService, times(1)).handleBetSettlements(sportEventOutcome);
     }
 }
