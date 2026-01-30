@@ -32,7 +32,7 @@ public class SportEventServiceImpl implements SportEventService {
         List<BetEntity> betEntityList = betRepository.findByEventId(sportEventOutcome.getEventId());
         List<Bet> betDomainList = betMapper.toDomainList(betEntityList);
 
-        // Build settlement messages ONLY for winners and forward to RocketMQ producer
+        // Send bet settlement messages ONLY to winners through RocketMQ producer
         betDomainList.stream()
             .filter(bet -> bet.hasWon(sportEventOutcome.getEventWinnerId()))
             .map(BetSettlementMessage::createBetSettlementMessage)

@@ -1,6 +1,5 @@
 package com.example.sportsbettingsettlement.controller;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,7 +41,7 @@ class SportEventControllerTest {
     void shouldAddSportEventOutcome() throws Exception {
         SportEventOutcomeDto sportEventOutcomeDto = new SportEventOutcomeDto(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1);
         SportEventOutcome sportEventOutcome = new SportEventOutcome(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1);
-        when(sportEventOutcomeMapper.toDomain(any())).thenReturn(sportEventOutcome);
+        when(sportEventOutcomeMapper.toDomain(sportEventOutcomeDto)).thenReturn(sportEventOutcome);
         doNothing().when(sportEventService).add(sportEventOutcome);
 
         mockMvc.perform(post(ENDPOINT_SPORT_EVENT_OUTCOMES)

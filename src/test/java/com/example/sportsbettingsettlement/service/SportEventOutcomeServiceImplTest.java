@@ -1,10 +1,10 @@
 package com.example.sportsbettingsettlement.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import com.example.sportsbettingsettlement.domain.BetSettlementMessage;
@@ -76,7 +76,6 @@ class SportEventOutcomeServiceImplTest {
         when(betRepository.findByEventId(EVENT_ID_EVT_1)).thenReturn(List.of(winner, loser));
 
         ArgumentCaptor<BetSettlementMessage> captor = ArgumentCaptor.forClass(BetSettlementMessage.class);
-        doNothing().when(rocketMQProducer).send(any());
 
         sportEventService.handleBetSettlements(new SportEventOutcome(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1));
 
@@ -97,6 +96,6 @@ class SportEventOutcomeServiceImplTest {
 
         sportEventService.handleBetSettlements(new SportEventOutcome(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1));
 
-        verify(rocketMQProducer, times(0)).send(any());
+        verifyNoInteractions(rocketMQProducer);
     }
 }
