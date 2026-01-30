@@ -52,7 +52,7 @@ class SportEventControllerTest {
     }
 
     @Test
-    void shouldAFailToAdSportEventOutcomeAndThrowBadRequestWhenDtoIsInvalid() throws Exception {
+    void shouldFailToAddSportEventOutcomeAndThrowBadRequestWhenDtoIsInvalid() throws Exception {
         // Missing eventId and eventWinnerId
         String invalidJson = "{\"eventName\":\"" + EVENT_ONE + "\"}";
 
