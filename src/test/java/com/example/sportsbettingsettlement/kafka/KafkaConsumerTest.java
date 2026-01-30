@@ -14,6 +14,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class KafkaConsumerTest {
 
+    private static final String EVENT_ID_EVT_1 = "EVT-1";
+    private static final String EVENT_ONE = "Event One";
+    private static final String WINNER_ID_WIN_1 = "WIN-1";
+
     @Mock
     private SportEventService sportEventService;
 
@@ -22,7 +26,7 @@ class KafkaConsumerTest {
 
     @Test
     void shouldConsumeSportEventOutcome() {
-        SportEventOutcome sportEventOutcome = new SportEventOutcome("EVT-1", "Event One", "WIN-1");
+        SportEventOutcome sportEventOutcome = new SportEventOutcome(EVENT_ID_EVT_1, EVENT_ONE, WINNER_ID_WIN_1);
 
         kafkaConsumer.consume(sportEventOutcome);
 
