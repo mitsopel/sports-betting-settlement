@@ -3,6 +3,7 @@ package com.example.sportsbettingsettlement.controller;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.example.sportsbettingsettlement.domain.SportEventOutcome;
+import com.example.sportsbettingsettlement.dto.OperationResultDto;
 import com.example.sportsbettingsettlement.dto.SportEventOutcomeDto;
 import com.example.sportsbettingsettlement.mapper.SportEventOutcomeMapper;
 import com.example.sportsbettingsettlement.service.SportEventService;
@@ -23,9 +24,9 @@ public class SportEventController {
     private final SportEventOutcomeMapper sportEventOutcomeMapper;
 
     @PostMapping(path = "/outcomes", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> add(@Valid @RequestBody SportEventOutcomeDto sportEventOutcomeDto) {
+    public ResponseEntity<OperationResultDto> add(@Valid @RequestBody SportEventOutcomeDto sportEventOutcomeDto) {
         SportEventOutcome sportEventOutcome = sportEventOutcomeMapper.toDomain(sportEventOutcomeDto);
         sportEventService.add(sportEventOutcome);
-        return ResponseEntity.ok("Sport event outcome published to Kafka");
+        return ResponseEntity.ok(new OperationResultDto("Sport event outcome published to Kafka"));
     }
 }
