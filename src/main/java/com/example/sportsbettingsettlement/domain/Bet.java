@@ -1,7 +1,6 @@
 package com.example.sportsbettingsettlement.domain;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 import lombok.Value;
 
 @Value
@@ -15,6 +14,6 @@ public class Bet {
     BigDecimal betAmount;
 
     public boolean hasWon(String eventWinnerId) {
-        return Objects.equals(this.eventWinnerId, eventWinnerId);
+        return this.eventWinnerId.equals(eventWinnerId);
     }
 }

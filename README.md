@@ -31,8 +31,9 @@ if a broker is running, the app will send real messages; otherwise it will fall 
 
 - `controller/SportEventController.java`: REST endpoint to publish outcomes.
 - `kafka/KafkaProducer.java`: Publishes `SportEventOutcome` objects to Kafka (JSON-serialized via Spring Kafka).
-- `kafka/KafkaConsumer.java`: Consumes `SportEventOutcome` objects from Kafka and triggers handling.
-- `service/SportEventServiceImpl.java`: Matches bets by eventId, filters winners, and builds settlement messages.
+- `kafka/KafkaConsumer.java`: Consumes `SportEventOutcome` objects from Kafka and delegates settlement handling to `BetService`.
+- `service/SportEventServiceImpl.java`: Publishes incoming sport event outcomes to Kafka.
+- `service/BetServiceImpl.java`: Matches bets by eventId, filters winners and sends settlement messages via RocketMQ.
 - `repository/BetRepository.java`: JPA repository.
 - `rocketmq/RocketMQProducer.java`: RocketMQ producer that sends via RocketMQTemplate when available; otherwise logs
   payloads (mock fallback).

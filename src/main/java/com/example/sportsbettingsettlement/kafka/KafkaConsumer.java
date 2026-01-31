@@ -1,7 +1,7 @@
 package com.example.sportsbettingsettlement.kafka;
 
 import com.example.sportsbettingsettlement.domain.SportEventOutcome;
-import com.example.sportsbettingsettlement.service.SportEventService;
+import com.example.sportsbettingsettlement.service.BetService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class KafkaConsumer {
 
-    private final SportEventService sportEventService;
+    private final BetService betService;
 
     @KafkaListener(topics = "${kafka.topics.event-outcomes}", groupId = "${kafka.consumer.group-id}")
     public void consume(SportEventOutcome sportEventOutcome) {
         log.info("Received sportEventOutcome from Kafka: {}", sportEventOutcome);
-        sportEventService.handleBetSettlements(sportEventOutcome);
+        betService.handleSettlements(sportEventOutcome);
     }
 }
